@@ -102,7 +102,9 @@ of substrate atoms to product atoms.
 sub new {
   my ($class, $substrate, $product, $mapping, %args) = @_;
 
-  die "$class substrate and product must coincide on atoms\n"
+  die sprintf(
+    "$class substrate and product must coincide on atoms (%s ne %s)\n", 
+        $substrate->formula, $product->formula) 
     if $substrate->formula ne $product->formula;
 
   my $order1 = 0;
@@ -117,7 +119,9 @@ sub new {
     if $order1 != $order2;
 
   foreach my $atom ($substrate->atoms) {
-    die "$class substrate and product must coincide on atom symbols\n"
+    die sprintf(
+        "$class substrate and product must coincide on atom symbols "
+        ."(%s ne %s)\n", $atom->symbol, $mapping->{$atom}->symbol)
       if $atom->symbol ne $mapping->{$atom}->symbol;
   }
 

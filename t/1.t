@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use Chemistry::File::SMILES;
 use Chemistry::Pattern;
-use lib 'lib';
 use Chemistry::Reaction;
+use Test::More tests => 16;
 
-open F, "reactions.txt" or die;
+open F, "t/reactions.txt" or die;
 my @reacts;
 while (<F>) {
     chomp;
@@ -29,11 +29,13 @@ while (<F>) {
     push @reacts, $react;
 }
 
-my @mols = Chemistry::Mol->read('mols.smi');
+open F, "t/1.out" or die;
+
+my @mols = Chemistry::Mol->read('t/mols.smi');
 for my $react (@reacts) {
     for my $mol (@mols) {
         my @products;
-        printf "%s\t%s\t", $react->name, $mol->name;
+        my $got = sprintf "%s\t%s\t", $react->name, $mol->name;
         my $subst = $react->substrate;
         while ($subst->match($mol)) {
             my $new_mol = $mol->clone;
@@ -41,6 +43,9 @@ for my $react (@reacts) {
             $react->forward($new_mol, @map);
             push @products, $new_mol;
         }
-        print join(", ", map {$_->print(format=>'smiles')} @products), "\n";
+        $got .= join(", ", map {$_->print(format=>'smiles')} @products);
+        my $expected = <F>;
+        chomp $expected;
+        is($got, $expected, "$expected");
     }
 }

@@ -1,0 +1,4 @@
+C=CC=C.C=C      C1C=CCCC1       Diels-Alder
+C=CC=C          C1C=CC1         Electrocyclic 4e
+C(=O)O.CO       C(=O)OC.O       Esterification
+C=C.BrBr        C(CBr)Br        Bromination
